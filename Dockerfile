@@ -1,33 +1,29 @@
-# مرحلة البناء (Build Stage)
-FROM node:18-alpine AS build
+# Build stage
+FROM node:18-alpine as build
 
-# تحديد مجلد العمل داخل الحاوية
 WORKDIR /app
 
-# نسخ ملفات package.json و package-lock.json
+# Copy package files
 COPY package*.json ./
 
-# تثبيت التبعيات
+# Install dependencies
 RUN npm install
 
-# نسخ بقية ملفات المشروع
+# Copy all files
 COPY . .
 
-# بناء تطبيق React
+# Build the app
 RUN npm run build
 
-# ================================
-# مرحلة الإنتاج (Production Stage)
+# Production stage
 FROM nginx:alpine
 
-# نسخ الملفات المبنية إلى مجلد Nginx الافتراضي
+# Copy built assets from build stage
 COPY --from=build /app/build /usr/share/nginx/html
 
-# استبدال ملف إعدادات Nginx بالملف المخصص
+# Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# فتح المنفذ 80
-EXPOSE 80
+EXPOSE 9000
 
-# تشغيل Nginx في الواجهة الأمامية
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"] 
