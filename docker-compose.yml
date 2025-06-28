@@ -6,7 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: sports-frontend
-    restart: unless-stopped
     ports:
       - "3100:9000" # ربط المنفذ الخارجي (3100) بالداخلي (9000)
     volumes:
