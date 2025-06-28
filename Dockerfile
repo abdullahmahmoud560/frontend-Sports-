@@ -29,7 +29,7 @@ COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # فتح بورت 80
-EXPOSE 80
+EXPOSE 9000
 
 # تشغيل Nginx
 CMD ["nginx", "-g", "daemon off;"]
