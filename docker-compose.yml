@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  sports-frontend:
+    image: abdullahmahmoud560/sports-frontend:latest
+    container_name: sports-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3100:9000" # ربط المنفذ الخارجي بالداخلي
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    labels:
+      # إعدادات Coolify / Traefik
+      - "coolify.managed=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.sports-frontend.rule=Host(`yourdomain.com`)"
+      - "traefik.http.routers.sports-frontend.entrypoints=http,https"
+      - "traefik.http.routers.sports-frontend.tls.certresolver=le"
+      - "traefik.http.services.sports-frontend.loadbalancer.server.port=9000"
+
+networks:
+  default:
+    name: coolify_default
