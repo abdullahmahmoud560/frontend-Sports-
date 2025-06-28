@@ -28,7 +28,7 @@ COPY --from=build /app/build /usr/share/nginx/html
 # نسخ إعدادات Nginx المخصصة
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# فتح بورت 80
+# فتح البورت 9000 داخل الحاوية (Coolify يحتاج بورت داخلي أكبر من 1024)
 EXPOSE 9000
 
 # تشغيل Nginx
