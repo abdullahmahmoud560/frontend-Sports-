@@ -1,34 +1,33 @@
 # ===== Build stage =====
-FROM node:18-alpine as build
+FROM node:20-alpine as build
 
-# تعيين مجلد العمل داخل الحاوية
 WORKDIR /app
 
-# نسخ ملفات package.json و package-lock.json
+# نسخ package.json و package-lock.json
 COPY package*.json ./
 
 # تثبيت التبعيات
 RUN npm install
 
-# نسخ باقي ملفات المشروع
+# نسخ باقي المشروع
 COPY . .
 
-# بناء تطبيق React
+# بناء التطبيق
 RUN npm run build
 
 # ===== Production stage =====
 FROM nginx:alpine
 
-# حذف ملفات HTML الافتراضية من Nginx
+# حذف ملفات HTML الافتراضية
 RUN rm -rf /usr/share/nginx/html/*
 
-# نسخ الملفات المبنية من مرحلة البناء
+# نسخ ملفات البناء
 COPY --from=build /app/build /usr/share/nginx/html
 
-# نسخ إعدادات Nginx المخصصة
+# نسخ إعدادات Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# فتح البورت 9000 داخل الحاوية (Coolify يحتاج بورت داخلي أكبر من 1024)
+# EXPOSE المنفذ المستخدم في nginx.conf
 EXPOSE 9000
 
 # تشغيل Nginx

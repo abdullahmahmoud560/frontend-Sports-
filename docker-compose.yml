@@ -8,16 +8,13 @@ services:
     container_name: sports-frontend
     restart: unless-stopped
     ports:
-      - "3100:9000" # ربط المنفذ الخارجي بالداخلي
-    environment:
-      - ASPNETCORE_URLS=http://+:9000
-      - DOTNET_ENVIRONMENT=Production
+      - "3100:9000" # المنفذ الخارجي = 3100، الداخلي = 9000
     volumes:
-      - ./dataprotection-keys:/root/.aspnet/DataProtection-Keys
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     labels:
       - "coolify.managed=true"
       - "traefik.enable=true"
-      - "traefik.http.routers.sports-frontend.rule=Host(`yourdomain.com`)"
+      - "traefik.http.routers.sports-frontend.rule=Host(`quattrogcc.ae`)"
       - "traefik.http.routers.sports-frontend.entrypoints=http,https"
       - "traefik.http.routers.sports-frontend.tls.certresolver=le"
       - "traefik.http.services.sports-frontend.loadbalancer.server.port=9000"
