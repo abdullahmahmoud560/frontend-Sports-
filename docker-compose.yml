@@ -2,18 +2,19 @@ version: '3.8'
 
 services:
   sports-frontend:
-    image: abdullahmahmoud560/sports-frontend:latest
-    container_name: sports-frontend
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: sports-frontend
+    restart: unless-stopped
     ports:
       - "3100:9000" # ربط المنفذ الخارجي بالداخلي
-    restart: unless-stopped
+    environment:
+      - ASPNETCORE_URLS=http://+:9000
+      - DOTNET_ENVIRONMENT=Production
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./dataprotection-keys:/root/.aspnet/DataProtection-Keys
     labels:
-      # إعدادات Coolify / Traefik
       - "coolify.managed=true"
       - "traefik.enable=true"
       - "traefik.http.routers.sports-frontend.rule=Host(`yourdomain.com`)"
