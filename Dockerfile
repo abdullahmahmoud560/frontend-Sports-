@@ -6,17 +6,18 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# انسخ ملفات البيئة قبل البناء
+COPY .env .env
+
 COPY . .
-# نستخدم env.production تلقائيًا
+
 RUN npm run build
 
 # Step 2: Serve with Nginx
 FROM nginx:alpine
 
-# نسخ ملفات البناء إلى nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
-# حذف الكونفج الافتراضي
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
