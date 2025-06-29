@@ -1,21 +1,21 @@
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sports-frontend
+    container_name: react-frontend
     restart: unless-stopped
-    ports:
-      - "3100:9000"
     labels:
-      - "coolify.managed=true"
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`quattrogcc.ae`)"
-      - "traefik.http.routers.frontend.entrypoints=http,https"
-      - "traefik.http.routers.frontend.tls.certresolver=le"
-      - "traefik.http.services.frontend.loadbalancer.server.port=9000"
+      - "traefik.http.routers.react.rule=Host(`quattrogcc.ae`)"
+      - "traefik.http.routers.react.entrypoints=http,https"
+      - "traefik.http.routers.react.tls.certresolver=le"
+      - "traefik.http.services.react.loadbalancer.server.port=80"
+    networks:
+      - webnet
 
-volumes:
-  node_modules:
+networks:
+  webnet:
+    external: true  # Assuming Traefik الشبكة مرفوعة خارجيًا
