@@ -1,34 +1,25 @@
-# Build stage
+# Step 1: Build the React app
 FROM node:18-alpine AS build
 
 WORKDIR /app
 
-# نسخ ملفات package.json و package-lock.json فقط للتثبيت
 COPY package*.json ./
+RUN npm install
 
-# تثبيت التبعيات
-RUN npm ci
-
-# نسخ باقي ملفات المشروع
 COPY . .
-
-# بناء المشروع (للبيئة الإنتاجية)
+# نستخدم env.production تلقائيًا
 RUN npm run build
 
-# Production stage
-FROM nginx:stable-alpine
+# Step 2: Serve with Nginx
+FROM nginx:alpine
 
-# حذف ملفات nginx الافتراضية
-RUN rm -rf /usr/share/nginx/html/*
-
-# نسخ ملفات البناء من المرحلة الأولى
+# نسخ ملفات البناء إلى nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
-# نسخ ملف إعدادات Nginx مخصص (اختياري)
+# حذف الكونفج الافتراضي
+RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# تعريض البورت 80
 EXPOSE 80
 
-# تشغيل Nginx في المقدمة
 CMD ["nginx", "-g", "daemon off;"]
