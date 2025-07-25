@@ -1,0 +1,298 @@
+/* الصفحة الرئيسية */
+.schedule-page {
+  background: #f6f7fa;
+  min-height: 100vh;
+  padding: 32px 0 0 0;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* الهيدر */
+.schedule-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding: 0 40px;
+}
+.schedule-title {
+  color: #ef4343;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+.schedule-desc {
+  color: #888;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+.schedule-filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.refresh-btn {
+  background: #fff;
+  color: #ef4343;
+  border: 1px solid #ef4343;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.refresh-btn:hover {
+  background: #ef4343;
+  color: #fff;
+}
+.filter-select {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  color: #333;
+  min-width: 120px;
+}
+
+/* قائمة المباريات */
+.matches-list {
+  padding: 0 40px;
+}
+.match-card {
+  background: #f0f4ff;
+  border: 1px solid #d6e4ff;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.match-card--active {
+  border-top: 4px solid #ef4343;
+}
+.match-status {
+  padding: 16px 24px 0 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+.status-badge {
+  padding: 4px 18px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #bdbdbd;
+  display: inline-block;
+}
+.status-badge--active {
+  background: #ef4343;
+}
+.match-info {
+  padding: 0 24px 20px 24px;
+}
+.match-title {
+  color: #ef4343;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  margin-top: 0;
+}
+.match-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  color: #222;
+  font-size: 1.1rem;
+  align-items: center;
+}
+.match-details .icon {
+  color: #ef4343;
+  margin-left: 6px;
+  font-size: 1.2em;
+}
+
+/* Media Queries للموبايل */
+@media (max-width: 768px) {
+  .schedule-page {
+    padding: 20px 0 0 0;
+  }
+  
+  .schedule-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 0 20px;
+    margin-bottom: 24px;
+  }
+  
+  .schedule-title {
+    font-size: 1.5rem;
+  }
+  
+  .schedule-desc {
+    font-size: 1rem;
+  }
+  
+  .schedule-filters {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .refresh-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .filter-select {
+    min-width: 100px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .matches-list {
+    padding: 0 20px;
+  }
+  
+  .match-status {
+    padding: 12px 16px 0 16px;
+  }
+  
+  .match-info {
+    padding: 0 16px 16px 16px;
+  }
+  
+  .match-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .match-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+  
+  .match-details .icon {
+    margin-left: 4px;
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .schedule-page {
+    padding: 16px 0 0 0;
+  }
+  
+  .schedule-header {
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+  
+  .schedule-title {
+    font-size: 1.3rem;
+  }
+  
+  .schedule-desc {
+    font-size: 0.9rem;
+  }
+  
+  .schedule-filters {
+    gap: 8px;
+  }
+  
+  .refresh-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .filter-select {
+    min-width: 90px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .matches-list {
+    padding: 0 16px;
+  }
+  
+  .match-card {
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+  
+  .match-status {
+    padding: 10px 12px 0 12px;
+  }
+  
+  .status-badge {
+    padding: 3px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .match-info {
+    padding: 0 12px 12px 12px;
+  }
+  
+  .match-title {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  
+  .match-details {
+    font-size: 0.9rem;
+    gap: 6px;
+  }
+  
+  .match-details .icon {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 360px) {
+  .schedule-header {
+    padding: 0 12px;
+  }
+  
+  .schedule-title {
+    font-size: 1.2rem;
+  }
+  
+  .schedule-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .refresh-btn,
+  .filter-select {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .matches-list {
+    padding: 0 12px;
+  }
+  
+  .match-status {
+    padding: 8px 10px 0 10px;
+  }
+  
+  .match-info {
+    padding: 0 10px 10px 10px;
+  }
+  
+  .match-title {
+    font-size: 1rem;
+  }
+  
+  .match-details {
+    font-size: 0.85rem;
+  }
+} 
