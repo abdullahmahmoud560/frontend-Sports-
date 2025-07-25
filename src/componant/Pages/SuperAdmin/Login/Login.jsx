@@ -177,7 +177,7 @@ const Login = () => {
         })
         .catch((error) => {
           console.error("Registration error:", error);
-          alert(response.data);
+          alert(error?.response?.data || "حدث خطأ غير متوقع.");
         })
         .finally(() => {
           setSubmitting(false);
@@ -211,8 +211,8 @@ const Login = () => {
         })
         .catch((error) => {
           console.error("Registration error:", error);
-          alert(response.data);
-        })
+          alert(error?.response?.data || "حدث خطأ غير متوقع.");
+        })        
         .finally(() => {
           setSubmitting(false);
         });
