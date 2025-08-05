@@ -1,0 +1,497 @@
+/* صفحة كشف الإنذارات */
+.warning-report-page {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* Header الصفحة */
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 30px;
+  background: #ef4343;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-subtitle {
+  font-size: 18px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ef4343;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* تنسيق مكون اختيار الفئات العمرية */
+.warnings-categories-container {
+  margin-bottom: 40px;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.categories-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.categories-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #ef4343, #f39c12);
+  border-radius: 2px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.category-card {
+  border: 3px solid #e0e6ed;
+  border-radius: 15px;
+  padding: 25px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border-color: #3498db;
+}
+
+.category-card.selected {
+  border-color: #ef4343;
+  background: #fff5f5;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(239, 67, 67, 0.2);
+}
+
+.category-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+  transform: scale(1.1);
+}
+
+.category-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 15px 0;
+}
+
+.warnings-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.count-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ef4343;
+  line-height: 1;
+}
+
+.count-text {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin-top: 5px;
+}
+
+.last-warning {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #ecf0f1;
+}
+
+/* جدول التفاصيل */
+.warnings-table-container {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.table-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.close-button {
+  background: #ef4343;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.close-button:hover {
+  background: #dc3545;
+}
+
+/* جدول الإنذارات */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.warnings-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.warnings-table th {
+  background: #f8f9fa;
+  color: #2c3e50;
+  font-weight: 600;
+  padding: 15px 20px;
+  text-align: right;
+  border-bottom: 2px solid #e9ecef;
+  font-size: 14px;
+}
+
+.warnings-table td {
+  padding: 15px 20px;
+  text-align: right;
+  border-bottom: 1px solid #f1f3f4;
+  vertical-align: middle;
+  color: #2c3e50;
+}
+
+.warnings-table tr:hover {
+  background: #f8f9fa;
+}
+
+.warnings-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* معلومات اللاعب */
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.player-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #ef4343;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* شارات الإنذارات */
+.warning-badge {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
+  color: white;
+}
+
+.warning-yellow {
+  background: #f39c12;
+}
+
+.warning-red {
+  background: #e74c3c;
+}
+
+.warning-blue {
+  background: #3498db;
+}
+
+.warning-orange {
+  background: #e67e22;
+}
+
+.warning-gray {
+  background: #95a5a6;
+}
+
+/* حالة عدم وجود بيانات */
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+}
+
+.no-data-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  opacity: 0.7;
+}
+
+.no-data p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* التصميم المتجاوب */
+@media (max-width: 768px) {
+  .warning-report-page {
+    padding: 15px;
+  }
+  
+  .page-header {
+    padding: 20px 15px;
+    margin-bottom: 25px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+  
+  .page-subtitle {
+    font-size: 16px;
+  }
+  
+  .warnings-categories-container {
+    padding: 20px 15px;
+    margin-bottom: 25px;
+  }
+  
+  .categories-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .category-card {
+    padding: 20px 15px;
+  }
+  
+  .category-name {
+    font-size: 18px;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .table-header h3 {
+    font-size: 18px;
+  }
+  
+  /* تحويل الجدول إلى cards في الموبايل */
+  .warnings-table,
+  .warnings-table thead,
+  .warnings-table tbody,
+  .warnings-table th,
+  .warnings-table td,
+  .warnings-table tr {
+    display: block;
+  }
+  
+  .warnings-table thead {
+    display: none;
+  }
+  
+  .warnings-table tr {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .warnings-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f3f4;
+    text-align: left;
+  }
+  
+  .warnings-table td:last-child {
+    border-bottom: none;
+  }
+  
+  .warnings-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #7f8c8d;
+    min-width: 120px;
+    font-size: 13px;
+  }
+  
+  .warnings-table td:nth-child(1)::before {
+    content: 'اللاعب: ';
+  }
+  
+  .warnings-table td:nth-child(2)::before {
+    content: 'الفريق: ';
+  }
+  
+  .warnings-table td:nth-child(3)::before {
+    content: 'نوع الإنذار: ';
+  }
+  
+  .warnings-table td:nth-child(4)::before {
+    content: 'التاريخ: ';
+  }
+  
+  .player-info {
+    flex-direction: row-reverse;
+  }
+}
+
+@media (max-width: 480px) {
+  .warning-report-page {
+    padding: 10px;
+  }
+  
+  .page-header {
+    padding: 15px 10px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .warnings-categories-container {
+    padding: 15px 10px;
+  }
+  
+  .category-card {
+    padding: 15px 10px;
+  }
+  
+  .category-icon {
+    font-size: 36px;
+  }
+  
+  .category-name {
+    font-size: 16px;
+  }
+  
+  .count-number {
+    font-size: 24px;
+  }
+  
+  .warnings-table tr {
+    padding: 12px;
+  }
+  
+  .warning-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
+/* تحسينات الأداء والوصولية */
+@media (prefers-reduced-motion: reduce) {
+  .category-card,
+  .close-button,
+  .category-icon {
+    transition: none;
+  }
+  
+  .loading-spinner {
+    animation: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .category-card {
+    border-width: 2px;
+  }
+  
+  .warning-badge {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+  }
+}

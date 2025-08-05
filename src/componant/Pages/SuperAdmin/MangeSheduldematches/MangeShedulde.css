@@ -1,0 +1,523 @@
+/* الصفحة الرئيسية */
+.schedule-page {
+  background: #f6f7fa;
+  min-height: 100vh;
+  padding: 32px 0 0 0;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* الهيدر */
+.schedule-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding: 0 40px;
+}
+.schedule-title {
+  color: #ef4343;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+.schedule-desc {
+  color: #888;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+.schedule-filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.refresh-btn {
+  background: #fff;
+  color: #ef4343;
+  border: 1px solid #ef4343;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.refresh-btn:hover {
+  background: #ef4343;
+  color: #fff;
+}
+.filter-select {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  color: #333;
+  min-width: 120px;
+}
+
+/* قائمة المباريات */
+.matches-list {
+  padding: 0 40px;
+}
+.match-card {
+  background: #f0f4ff;
+  border: 1px solid #d6e4ff;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.match-card--active {
+  border-top: 4px solid #ef4343;
+}
+.match-status {
+  padding: 16px 24px 0 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+.status-badge {
+  padding: 4px 18px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #bdbdbd;
+  display: inline-block;
+}
+.status-badge--active {
+  background: #ef4343;
+}
+.match-info {
+  padding: 0 24px 20px 24px;
+}
+.match-title {
+  color: #ef4343;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  margin-top: 0;
+}
+.match-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  color: #222;
+  font-size: 1.1rem;
+  align-items: center;
+}
+.match-details .icon {
+  color: #ef4343;
+  margin-left: 6px;
+  font-size: 1.2em;
+}
+
+/* Categories Section */
+.categories-section {
+  margin-bottom: 32px;
+  padding: 0 40px;
+}
+
+.categories-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.category-card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid #e5e7eb;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+.category-card:hover::before {
+  transform: scaleX(1);
+}
+
+.category-card.active {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(239, 68, 68, 0.2);
+}
+
+.category-card.active::before {
+  transform: scaleX(1);
+}
+
+.category-icon {
+  font-size: 48px;
+  min-width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+  transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(239, 68, 68, 0.4);
+}
+
+.category-content {
+  flex: 1;
+}
+
+.category-label {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+  transition: color 0.3s ease;
+}
+
+.category-card.active .category-label {
+  color: #ef4444;
+}
+
+.category-age {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 500;
+}
+
+.category-card.active .category-age {
+  color: #ef4444;
+}
+
+.category-indicator {
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.active-indicator {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  animation: bounceIn 0.5s ease;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Media Queries للموبايل */
+@media (max-width: 768px) {
+  .schedule-page {
+    padding: 20px 0 0 0;
+  }
+  
+  .schedule-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 0 20px;
+    margin-bottom: 24px;
+  }
+  
+  .schedule-title {
+    font-size: 1.5rem;
+  }
+  
+  .schedule-desc {
+    font-size: 1rem;
+  }
+  
+  .schedule-filters {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .refresh-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .filter-select {
+    min-width: 100px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .categories-section {
+    padding: 0 20px;
+  }
+  
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .category-card {
+    padding: 20px;
+    gap: 12px;
+  }
+  
+  .category-icon {
+    font-size: 40px;
+    min-width: 56px;
+    height: 56px;
+    border-radius: 12px;
+  }
+  
+  .category-label {
+    font-size: 18px;
+  }
+  
+  .category-age {
+    font-size: 13px;
+  }
+  
+  .categories-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .matches-list {
+    padding: 0 20px;
+  }
+  
+  .match-status {
+    padding: 12px 16px 0 16px;
+  }
+  
+  .match-info {
+    padding: 0 16px 16px 16px;
+  }
+  
+  .match-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .match-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+  
+  .match-details .icon {
+    margin-left: 4px;
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .schedule-page {
+    padding: 16px 0 0 0;
+  }
+  
+  .schedule-header {
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+  
+  .schedule-title {
+    font-size: 1.3rem;
+  }
+  
+  .schedule-desc {
+    font-size: 0.9rem;
+  }
+  
+  .schedule-filters {
+    gap: 8px;
+  }
+  
+  .refresh-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .filter-select {
+    min-width: 90px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .categories-section {
+    padding: 0 16px;
+    margin-bottom: 24px;
+  }
+  
+  .category-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+  
+  .category-icon {
+    font-size: 36px;
+    min-width: 48px;
+    height: 48px;
+    border-radius: 10px;
+  }
+  
+  .category-label {
+    font-size: 16px;
+  }
+  
+  .category-age {
+    font-size: 12px;
+  }
+  
+  .active-indicator {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .matches-list {
+    padding: 0 16px;
+  }
+  
+  .match-card {
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+  
+  .match-status {
+    padding: 10px 12px 0 12px;
+  }
+  
+  .status-badge {
+    padding: 3px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .match-info {
+    padding: 0 12px 12px 12px;
+  }
+  
+  .match-title {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  
+  .match-details {
+    font-size: 0.9rem;
+    gap: 6px;
+  }
+  
+  .match-details .icon {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 360px) {
+  .schedule-header {
+    padding: 0 12px;
+  }
+  
+  .schedule-title {
+    font-size: 1.2rem;
+  }
+  
+  .schedule-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .refresh-btn,
+  .filter-select {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .categories-section {
+    padding: 0 12px;
+  }
+
+  .matches-list {
+    padding: 0 12px;
+  }
+  
+  .match-status {
+    padding: 8px 10px 0 10px;
+  }
+  
+  .match-info {
+    padding: 0 10px 10px 10px;
+  }
+  
+  .match-title {
+    font-size: 1rem;
+  }
+  
+  .match-details {
+    font-size: 0.85rem;
+  }
+} 

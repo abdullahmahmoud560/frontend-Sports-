@@ -1,0 +1,1029 @@
+/* صفحة جدول المباريات */
+.table-match-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 30px;
+  background: #ef4343;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-subtitle {
+  font-size: 18px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Loading و States */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ef4343;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* تنسيق مكون اختيار الفئات العمرية */
+.age-categories-container {
+  margin-bottom: 40px;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.categories-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.categories-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #ef4343, #f39c12);
+  border-radius: 2px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.category-card {
+  background: #ffffff;
+  border: 3px solid #e0e6ed;
+  border-radius: 15px;
+  padding: 25px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover::before {
+  transform: scaleX(1);
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.category-card.selected {
+  border-color: #ef4343;
+  background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%);
+  box-shadow: 0 10px 30px rgba(239, 67, 67, 0.2);
+}
+
+.category-card.selected::before {
+  transform: scaleX(1);
+  background: #ef4343;
+}
+
+.category-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+  transform: scale(1.1);
+}
+
+.category-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.category-card.selected .category-name {
+  color: #ef4343;
+}
+
+.category-code {
+  font-size: 14px;
+  font-weight: 500;
+  color: #7f8c8d;
+  background: #f8f9fa;
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.category-card.selected .category-code {
+  background: #ef4343;
+  color: #ffffff;
+}
+
+/* حاوية الجدول الرئيسي */
+.tournament-table-container {
+  margin-top: 20px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* رأس الجدول */
+.table-header {
+  background: linear-gradient(135deg, #ef4343 0%, #d63333 100%);
+  color: white;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+}
+
+.table-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.selected-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+}
+
+.selected-category-badge .category-icon {
+  font-size: 16px;
+}
+
+/* شبكة البطولات */
+.competitions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 0;
+  padding: 0;
+}
+
+/* قسم البطولة الواحدة */
+.competition-section {
+  border-right: 1px solid #e9ecef;
+}
+
+.competition-section:last-child {
+  border-right: none;
+}
+
+/* رأس البطولة */
+.competition-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #e9ecef;
+  position: relative;
+}
+
+.competition-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* قائمة الفئات العمرية */
+.age-categories-list {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 200px;
+}
+
+.age-category-item {
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.age-category-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #ef4343;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.age-category-item.active {
+  background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%);
+  border-color: #ef4343;
+  color: #ef4343;
+  font-weight: 600;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 67, 67, 0.2);
+}
+
+.age-category-item.active::before {
+  transform: scaleX(1);
+}
+
+.category-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+  transition: color 0.3s ease;
+}
+
+.age-category-item.active .category-label {
+  color: #ef4343;
+}
+
+/* تذييل الجدول */
+.table-footer {
+  background: #f8f9fa;
+  padding: 30px;
+  border-top: 1px solid #e9ecef;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.info-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.info-icon {
+  font-size: 32px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ef4343 0%, #d63333 100%);
+  border-radius: 50%;
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 67, 67, 0.3);
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-content h3 {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* تنسيق مكون اختيار البطولات */
+.tournaments-container {
+  margin-bottom: 40px;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.tournaments-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.tournaments-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #ef4343, #f39c12);
+  border-radius: 2px;
+}
+
+.tournaments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tournament-card {
+  border: 3px solid #e0e6ed;
+  border-radius: 15px;
+  padding: 25px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tournament-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ef4343, #f39c12);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.tournament-card:hover::before {
+  transform: scaleX(1);
+}
+
+.tournament-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.tournament-card.selected {
+  border-color: #ef4343;
+  background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%);
+  box-shadow: 0 10px 30px rgba(239, 67, 67, 0.2);
+}
+
+.tournament-card.selected::before {
+  transform: scaleX(1);
+  background: #ef4343;
+}
+
+.tournament-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.tournament-card:hover .tournament-icon {
+  transform: scale(1.1);
+}
+
+.tournament-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.tournament-card.selected .tournament-name {
+  color: #ef4343;
+}
+
+/* تنسيق مكون تفاصيل البطولة */
+.tournament-details-container {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out;
+  margin-top: 20px;
+}
+
+.details-header {
+  background: linear-gradient(135deg, #ef4343 0%, #d63333 100%);
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+.tournament-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tournament-icon {
+  font-size: 32px;
+}
+
+.details-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.category-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+}
+
+/* قسم الفرق */
+.teams-section {
+  padding: 30px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.team-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.team-item:hover {
+  background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%);
+  border-color: #ef4343;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 67, 67, 0.2);
+}
+
+.team-rank {
+  background: #ef4343;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.team-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+  flex: 1;
+}
+
+/* قسم المباريات */
+.matches-section {
+  padding: 30px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.match-result {
+  background: #ffffff;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.match-result:hover {
+  border-color: #ef4343;
+  box-shadow: 0 4px 12px rgba(239, 67, 67, 0.1);
+}
+
+.match-date {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-bottom: 12px;
+  text-align: center;
+  background: #f8f9fa;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+.match-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.team-score {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.team-score:last-child {
+  flex-direction: row-reverse;
+}
+
+.team {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.score {
+  background: #ef4343;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.vs {
+  background: #f8f9fa;
+  color: #7f8c8d;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  border: 2px solid #e9ecef;
+}
+
+/* قسم الإحصائيات */
+.stats-section {
+  padding: 30px;
+  background: #f8f9fa;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #ef4343;
+}
+
+.stat-icon {
+  font-size: 32px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ef4343 0%, #d63333 100%);
+  border-radius: 50%;
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 67, 67, 0.3);
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-content h4 {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* رسالة عدم اختيار */
+.no-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+
+.no-selection-content {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.no-selection-content h3 {
+  font-size: 22px;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.no-selection-content p {
+  font-size: 16px;
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .table-match-page {
+    padding: 10px;
+  }
+
+  .page-title {
+    font-size: 28px;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+  }
+
+  /* البطولات */
+  .tournaments-container {
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+
+  .tournaments-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .tournaments-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .tournament-card {
+    padding: 20px 15px;
+  }
+
+  .tournament-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .tournament-name {
+    font-size: 16px;
+  }
+
+  /* الفئات العمرية */
+  .age-categories-container {
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+
+  .categories-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .category-card {
+    padding: 20px 15px;
+  }
+
+  .category-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .category-name {
+    font-size: 16px;
+  }
+
+  .category-code {
+    font-size: 12px;
+  }
+
+  /* تفاصيل البطولة */
+  .details-header {
+    padding: 20px;
+  }
+
+  .details-title {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .tournament-info {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .category-badge {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .teams-section,
+  .matches-section,
+  .stats-section {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .teams-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .team-item {
+    padding: 12px;
+  }
+
+  .team-rank {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .team-name {
+    font-size: 14px;
+  }
+
+  .match-result {
+    padding: 16px;
+  }
+
+  .match-teams {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .team-score {
+    justify-content: center;
+  }
+
+  .team-score:last-child {
+    flex-direction: row;
+  }
+
+  .team {
+    font-size: 14px;
+  }
+
+  .score {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .stat-card {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .stat-icon {
+    font-size: 24px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .stat-content h4 {
+    font-size: 12px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  .no-selection-content {
+    padding: 30px 20px;
+  }
+
+  .no-selection-content h3 {
+    font-size: 18px;
+  }
+
+  .no-selection-content p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 24px;
+  }
+
+  .details-title {
+    font-size: 20px;
+  }
+
+  .tournament-icon {
+    font-size: 24px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .team-item {
+    padding: 10px;
+  }
+
+  .team-rank {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .team-name {
+    font-size: 12px;
+  }
+
+  .match-result {
+    padding: 12px;
+  }
+
+  .team {
+    font-size: 12px;
+  }
+
+  .score {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .vs {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .stats-grid {
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .stat-icon {
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .stat-content h4 {
+    font-size: 10px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+}
