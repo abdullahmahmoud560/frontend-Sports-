@@ -238,15 +238,15 @@ const MangeMatches = () => {
     setId(player.id);
     // Pre-fill the edit form with player data
     editPlayerFormik.setValues({
-      category: player.category || "",
-      homeTeam: player.homeTeam || "",
-      awayTeam: player.awayTeam || "",
-      date: player.date || "",
-      time: player.time || "",
-      stadium: player.stadium || "",
-      matchStatus: player.matchStatus || "",
-      homeTeamScore: player.homeTeamScore || "",
-      awayTeamScore: player.awayTeamScore || "",
+      Category: player.category || "",
+      HomeTeamName: player.homeTeamName || "",
+      AwayTeamName: player.awayTeamName || "",
+      Date: player.date || "",
+      Time: player.time || "",
+      Stadium: player.stadium || "",
+      MatchStatus: player.matchStatus || "",
+      HomeTeamScore: player.homeTeamScore || "",
+      AwayTeamScore: player.awayTeamScore || "",
     });
     setShowEdit(true);
   };
@@ -262,36 +262,51 @@ const MangeMatches = () => {
     editPlayerFormik.resetForm();
   };
 
+  // Function to format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('ar-SA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+    } catch (error) {
+      return dateString;
+    }
+  };
+
   useEffect(() => {
     fetchPlayers();
   }, []);
 
   const addMatchFormik = useFormik({
     initialValues: {
-      category: "",
-      homeTeam: "",
-      awayTeam: "",
-      date: "",
-      time: "",
-      stadium: "",
-      matchStatus: "",
-      homeTeamScore: "",
-      awayTeamScore: "",
+      Category: "",
+      HomeTeamName: "",
+      AwayTeamName: "",
+      Date: "",
+      Time: "",
+      Stadium: "",
+      MatchStatus: "",
+      HomeTeamScore: "",
+      AwayTeamScore: "",
     },
     onSubmit: addMatch,
   });
 
   const editPlayerFormik = useFormik({
     initialValues: {
-      category: "",
-      homeTeam: "",
-      awayTeam: "",
-      date: "",
-      time: "",
-      stadium: "",
-      matchStatus: "",
-      homeTeamScore: "",
-      awayTeamScore: "",
+      Category: "",
+      HomeTeamName: "",
+      AwayTeamName: "",
+      Date: "",
+      Time: "",
+      Stadium: "",
+      MatchStatus: "",
+      HomeTeamScore: "",
+      AwayTeamScore: "",
     },
     onSubmit: editPlayer,
   });
@@ -319,7 +334,7 @@ const MangeMatches = () => {
         <select className="filter-select">
           <option>تصفية حسب الفئة</option>
         </select>
-        <input className="search-input" placeholder="ابحث باسم اللاعب" />
+        <input className="search-input" placeholder="ابحث باسم الفريق" />
       </div>
 
       {/* نافذة إضافة لاعب جديد */}
@@ -327,7 +342,7 @@ const MangeMatches = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <span>إضافة لاعب جديد</span>
+              <span>إضافة مباراة جديدة</span>
               <button className="close-btn" onClick={onCloseAdd}>
                 ×
               </button>
@@ -337,28 +352,31 @@ const MangeMatches = () => {
               onSubmit={addMatchFormik.handleSubmit}
             >
               <div className="form-row">
-                <input
+                <select
                   className={`form-input ${
-                    !addMatchFormik.values.pLayerName ? "input-error" : ""
+                    !addMatchFormik.values.Category ? "input-error" : ""
                   }`}
-                  type="text"
-                  placeholder="الفئة"
-                  value={addMatchFormik.values.category}
+                  value={addMatchFormik.values.Category}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue("category", e.target.value)
+                    addMatchFormik.setFieldValue("Category", e.target.value)
                   }
                   required
-                />
-                <label>الفئة</label>
+                >
+                  <option value="">اختر الفئة العمرية</option>
+                  <option value="U12">فئة 12</option>
+                  <option value="U14">فئة 14</option>
+                  <option value="U16">فئة 16</option>
+                </select>
+                <label>الفئة العمرية</label>
               </div>
               <div className="form-row">
                 <input
                   className="form-input"
                   type="text"
                   placeholder="الملعب"
-                  value={addMatchFormik.values.stadium}
+                  value={addMatchFormik.values.Stadium}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue("stadium", e.target.value)
+                    addMatchFormik.setFieldValue("Stadium", e.target.value)
                   }
                   required
                 />
@@ -369,9 +387,9 @@ const MangeMatches = () => {
                   className="form-input"
                   type="text"
                   placeholder="الفريق المنزلي"
-                  value={addMatchFormik.values.homeTeam}
+                  value={addMatchFormik.values.HomeTeamName}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue("homeTeam", e.target.value)
+                    addMatchFormik.setFieldValue("HomeTeamName", e.target.value)
                   }
                   required
                 />
@@ -382,9 +400,9 @@ const MangeMatches = () => {
                   className="form-input"
                   type="text"
                   placeholder="الفريق الضيف"
-                  value={addMatchFormik.values.awayTeam}
+                  value={addMatchFormik.values.AwayTeamName}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue("awayTeam", e.target.value)
+                    addMatchFormik.setFieldValue("AwayTeamName", e.target.value)
                   }
                   required
                 />
@@ -395,10 +413,11 @@ const MangeMatches = () => {
                   className="form-input"
                   type="date"
                   placeholder="تاريخ المباراة"
-                  value={addMatchFormik.values.date}
+                  value={addMatchFormik.values.Date}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue("date", e.target.value)
+                    addMatchFormik.setFieldValue("Date", e.target.value)
                   }
+                  required
                 />
                 <label>تاريخ المباراة</label>
               </div>
@@ -407,55 +426,54 @@ const MangeMatches = () => {
                   className="form-input"
                   type="time"
                   placeholder="الوقت"
-                  value={addMatchFormik.values.time}
+                  value={addMatchFormik.values.Time}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue("time", e.target.value)
+                    addMatchFormik.setFieldValue("Time", e.target.value)
                   }
                   required
                 />
                 <label>الوقت</label>
               </div>
               <div className="form-row">
-                <input
+                <select
                   className="form-input"
-                  type="number"
-                  placeholder="اهداف الفريق الضيف"
-                  value={addMatchFormik.values.awayTeamScore}
+                  value={addMatchFormik.values.MatchStatus}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue(
-                      "awayTeamScore",
-                      e.target.value
-                    )
+                    addMatchFormik.setFieldValue("MatchStatus", e.target.value)
                   }
-                />
-                <label>اهداف الفريق الضيف</label>
+                  required
+                >
+                  <option value="">اختر حالة المباراة</option>
+                  <option value="قادمة">قادمة</option>
+                  <option value="جارية">جارية</option>
+                  <option value="منتهية">منتهية</option>
+                  <option value="ملغية">ملغية</option>
+                </select>
+                <label>حالة المباراة</label>
               </div>
               <div className="form-row">
                 <input
                   className="form-input"
                   type="number"
-                  placeholder="اهداف الفريق المنزلي"
-                  value={addMatchFormik.values.homeTeamScore}
+                  placeholder="أهداف الفريق المنزلي"
+                  value={addMatchFormik.values.HomeTeamScore}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue(
-                      "homeTeamScore",
-                      e.target.value
-                    )
+                    addMatchFormik.setFieldValue("HomeTeamScore", e.target.value)
                   }
                 />
-                <label>اهداف الفريق المنزلي</label>
+                <label>أهداف الفريق المنزلي</label>
               </div>
               <div className="form-row">
                 <input
                   className="form-input"
-                  type="text"
-                  placeholder="الحاله"
-                  value={addMatchFormik.values.matchStatus}
+                  type="number"
+                  placeholder="أهداف الفريق الضيف"
+                  value={addMatchFormik.values.AwayTeamScore}
                   onChange={(e) =>
-                    addMatchFormik.setFieldValue("matchStatus", e.target.value)
+                    addMatchFormik.setFieldValue("AwayTeamScore", e.target.value)
                   }
                 />
-                <label>الحاله</label>
+                <label>أهداف الفريق الضيف</label>
               </div>
               <button className="update-btn" type="submit">
                 إضافة
@@ -476,9 +494,9 @@ const MangeMatches = () => {
               <th>الفريق الضيف</th>
               <th>تاريخ المباراة</th>
               <th>الوقت</th>
-              <th>اهداف الفريق الضيف</th>
-              <th>اهداف الفريق المنزلي</th>
-              <th>الحاله</th>
+              <th>حالة المباراة</th>
+              <th>أهداف الفريق المنزلي</th>
+              <th>أهداف الفريق الضيف</th>
               <th>الإجراءات</th>
             </tr>
           </thead>
@@ -487,13 +505,13 @@ const MangeMatches = () => {
               <tr key={idx}>
                 <td>{player.category}</td>
                 <td>{player.stadium}</td>
-                <td>{player.homeTeam}</td>
-                <td>{player.awayTeam}</td>
-                <td>{player.date}</td>
+                <td>{player.homeTeamName}</td>
+                <td>{player.awayTeamName}</td>
+                <td>{formatDate(player.date)}</td>
                 <td>{player.time}</td>
+                <td>{player.matchStatus}</td>
                 <td>{player.homeTeamScore}</td>
                 <td>{player.awayTeamScore}</td>
-                <td>{player.matchStatus}</td>
                 <td>
                   <button
                     className="action-btn delete"
@@ -519,7 +537,7 @@ const MangeMatches = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <span>تعديل بيانات لاعب</span>
+              <span>تعديل بيانات المباراة</span>
               <button className="close-btn" onClick={onCloseEdit}>
                 ×
               </button>
@@ -529,29 +547,32 @@ const MangeMatches = () => {
               onSubmit={editPlayerFormik.handleSubmit}
             >
               <div className="form-row">
-                <input
+                <select
                   className={`form-input ${
-                    !editPlayerFormik.values.category ? "input-error" : ""
+                    !editPlayerFormik.values.Category ? "input-error" : ""
                   }`}
-                  type="text"
-                  placeholder="الفئة"
-                  value={editPlayerFormik.values.category}
+                  value={editPlayerFormik.values.Category}
                   onChange={(e) =>
-                    editPlayerFormik.setFieldValue("category", e.target.value)
+                    editPlayerFormik.setFieldValue("Category", e.target.value)
                   }
                   required
-                />
-                <label>الفئة</label>
+                >
+                  <option value="">اختر الفئة العمرية</option>
+                  <option value="U12">فئة 12</option>
+                  <option value="U14">فئة 14</option>
+                  <option value="U16">فئة 16</option>
+                </select>
+                <label>الفئة العمرية</label>
               </div>
               <div className="form-row">
                 <input
                   className="form-input"
                   type="text"
                   placeholder="الملعب"
-                  value={editPlayerFormik.values.stadium}
+                  value={editPlayerFormik.values.Stadium}
                   onChange={(e) =>
                     editPlayerFormik.setFieldValue(
-                        "stadium",
+                        "Stadium",
                       e.target.value
                     )
                   }
@@ -564,10 +585,11 @@ const MangeMatches = () => {
                   className="form-input"
                   type="text"
                   placeholder="الفريق الضيف"
-                  value={editPlayerFormik.values.awayTeam}
+                  value={editPlayerFormik.values.AwayTeamName}
                   onChange={(e) =>
-                    editPlayerFormik.setFieldValue("awayTeam", e.target.value)
+                    editPlayerFormik.setFieldValue("AwayTeamName", e.target.value)
                   }
+                  required
                 />
                 <label>الفريق الضيف</label>
               </div>
@@ -577,9 +599,9 @@ const MangeMatches = () => {
                   className="form-input"
                   type="text"
                   placeholder="الفريق المنزلي"
-                  value={editPlayerFormik.values.homeTeam}
+                  value={editPlayerFormik.values.HomeTeamName}
                   onChange={(e) =>
-                    editPlayerFormik.setFieldValue("homeTeam", e.target.value)
+                    editPlayerFormik.setFieldValue("HomeTeamName", e.target.value)
                   }
                   required
                 />
@@ -589,10 +611,11 @@ const MangeMatches = () => {
                 <input
                   className="form-input"
                   type="date"
-                  value={editPlayerFormik.values.date}
+                  value={editPlayerFormik.values.Date}
                   onChange={(e) =>
-                    editPlayerFormik.setFieldValue("date", e.target.value)
+                    editPlayerFormik.setFieldValue("Date", e.target.value)
                   }
+                  required
                 />
                 <label>تاريخ المباراة</label>
               </div>
@@ -601,56 +624,54 @@ const MangeMatches = () => {
                   className="form-input"
                   type="time"
                   placeholder="الوقت"
-                  value={editPlayerFormik.values.time}
+                  value={editPlayerFormik.values.Time}
                   onChange={(e) =>
-                    editPlayerFormik.setFieldValue("time", e.target.value)
+                    editPlayerFormik.setFieldValue("Time", e.target.value)
                   }
                   required
                 />
                 <label>الوقت</label>
               </div>
               <div className="form-row">
-                <input
+                <select
                   className="form-input"
-                  type="number"
-                  placeholder="اهداف الفريق الضيف"
-                  value={editPlayerFormik.values.awayTeamScore}
+                  value={editPlayerFormik.values.MatchStatus}
                   onChange={(e) =>
-                    editPlayerFormik.setFieldValue(
-                      "awayTeamScore",
-                      e.target.value
-                    )
+                    editPlayerFormik.setFieldValue("MatchStatus", e.target.value)
                   }
                   required
-                />
-                <label>اهداف الفريق الضيف</label>
+                >
+                  <option value="">اختر حالة المباراة</option>
+                  <option value="قادمة">قادمة</option>
+                  <option value="جارية">جارية</option>
+                  <option value="منتهية">منتهية</option>
+                  <option value="ملغية">ملغية</option>
+                </select>
+                <label>حالة المباراة</label>
               </div>
               <div className="form-row">
                 <input
                   className="form-input"
                   type="number"
-                  placeholder="اهداف الفريق المنزلي"
-                  value={editPlayerFormik.values.homeTeamScore}
+                  placeholder="أهداف الفريق المنزلي"
+                  value={editPlayerFormik.values.HomeTeamScore}
                   onChange={(e) =>
-                    editPlayerFormik.setFieldValue("homeTeamScore", e.target.value)
+                    editPlayerFormik.setFieldValue("HomeTeamScore", e.target.value)
                   }
                 />
-                <label>اهداف الفريق المنزلي</label>
+                <label>أهداف الفريق المنزلي</label>
               </div>
               <div className="form-row">
                 <input
                   className="form-input"
-                  type="text"
-                  placeholder="الحاله"
-                  value={editPlayerFormik.values.matchStatus}
+                  type="number"
+                  placeholder="أهداف الفريق الضيف"
+                  value={editPlayerFormik.values.AwayTeamScore}
                   onChange={(e) =>
-                    editPlayerFormik.setFieldValue(
-                      "matchStatus",
-                      e.target.value
-                    )
+                    editPlayerFormik.setFieldValue("AwayTeamScore", e.target.value)
                   }
                 />
-                <label>الحاله</label>
+                <label>أهداف الفريق الضيف</label>
               </div>
               <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                 <button
