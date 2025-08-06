@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { jwtDecode } from "jwt-decode";
 import "./ActiveNoActive.css";
+import { toast, Toaster } from "react-hot-toast";
 
 const ActiveNoActive = () => {
   const [activePlayersData, setActivePlayersData] = useState([]);
@@ -51,10 +52,8 @@ const ActiveNoActive = () => {
     try {
       setIsLoading(true);
       setError(null);
-
       // Get token from localStorage
       const token = localStorage.getItem("token");
-
       if (!token) {
         console.error("No token found");
         setError("لم يتم العثور على رمز التحقق. يرجى تسجيل الدخول مرة أخرى.");
@@ -341,21 +340,12 @@ const ActiveNoActive = () => {
   };
 
   const handleAcceptPlayer = async (player, notes, statu) => {
-    if (!isAdmin) return;
-
     // Add player ID to processing set
     setProcessingPlayers((prev) => new Set(prev).add(player.id));
     setActionError(null);
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setActionError(
-          "لم يتم العثور على رمز التحقق. يرجى تسجيل الدخول مرة أخرى."
-        );
-        removeFromProcessing(player.id);
-        return;
-      }
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/AcceptOrReject-Players`,
         {
@@ -372,6 +362,7 @@ const ActiveNoActive = () => {
         }
       );
       const result = await response.json();
+      toast.success("تم قبول اللاعب بنجاح");
       // Move player from inactive to active if accepted
       if (statu === true) {
         const activatedPlayer = { ...player, statu: true };
@@ -383,16 +374,14 @@ const ActiveNoActive = () => {
       }
     } catch (error) {
       console.error("Error processing player:", error);
-      setActionError(`خطأ في معالجة اللاعب: ${error.message}`);
     } finally {
-      // Remove player ID from processing set
       removeFromProcessing(player.id);
     }
   };
 
   // Reject player (Admin only)
   const handleRejectPlayer = async (player, notes, statu) => {
-    if (!isAdmin) return;
+
 
     // Add player ID to processing set
     setProcessingPlayers((prev) => new Set(prev).add(player.id));
@@ -400,13 +389,7 @@ const ActiveNoActive = () => {
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setActionError(
-          "لم يتم العثور على رمز التحقق. يرجى تسجيل الدخول مرة أخرى."
-        );
-        removeFromProcessing(player.id);
-        return;
-      }
+
 
       // API call to reject player
       const response = await fetch(
@@ -425,6 +408,7 @@ const ActiveNoActive = () => {
         }
       );
       const result = await response.json();
+      toast.success("تم رفض اللاعب بنجاح");
       // Remove player from inactive list when rejected
       setInactivePlayersData((prev) => prev.filter((p) => p.id !== player.id));
 
@@ -760,45 +744,34 @@ const ActiveNoActive = () => {
 
                   <div className="player-info">
                     <h3 className="player-name">
-                      {player.PLayerName ||
-                        player.FullName ||
-                        player.name ||
-                        player.playerName ||
-                        "اسم غير محدد"}
+                      {player.pLayerName}
                     </h3>
 
-                    {player.Possition && (
+                    {player.possition && (
                       <p className="player-position">
                         <i className="fas fa-map-marker-alt"></i>
-                        {player.Possition}
+                        {player.possition}
                       </p>
                     )}
 
-                    {player.NumberShirt && (
+                    {player.numberShirt && (
                       <p className="player-number">
                         <i className="fas fa-hashtag"></i>
-                        رقم {player.NumberShirt}
+                        رقم {player.umberShirt}
                       </p>
                     )}
 
-                    {player.Nationality && (
+                    {player.nationality && (
                       <p className="player-nationality">
                         <i className="fas fa-flag"></i>
-                        {player.Nationality}
+                        {player.nationality}
                       </p>
                     )}
 
-                    {player.category && (
+                    {player.ageCategory && (
                       <p className="player-category">
                         <i className="fas fa-layer-group"></i>
-                        {player.category}
-                      </p>
-                    )}
-
-                    {player.BirthDate && (
-                      <p className="player-birthdate">
-                        <i className="fas fa-calendar"></i>
-                        {new Date(player.BirthDate).toLocaleDateString("ar-SA")}
+                        {player.ageCategory}
                       </p>
                     )}
                   </div>
@@ -1144,6 +1117,7 @@ const ActiveNoActive = () => {
           </div>
         </div>
       )}
+      <Toaster />
     </div>
   );
 };

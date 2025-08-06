@@ -1,11 +1,64 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Component, useRef } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import "./signForTechnical.css";
+
+// Error Boundary Component
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          padding: "2rem",
+          textAlign: "center",
+          background: "#fef2f2",
+          border: "1px solid #ef4444",
+          borderRadius: "8px",
+          margin: "1rem"
+        }}>
+          <h2 style={{ color: "#991b1b", marginBottom: "1rem" }}>
+            ⚠️ حدث خطأ في التطبيق
+          </h2>
+          <p style={{ color: "#dc2626", marginBottom: "1rem" }}>
+            يرجى تحديث الصفحة أو المحاولة مرة أخرى
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              background: "#dc2626",
+              color: "white",
+              border: "none",
+              padding: "0.5rem 1rem",
+              borderRadius: "4px",
+              cursor: "pointer"
+            }}
+          >
+            تحديث الصفحة
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // Updated to match the new API structure for player registration
 // API expects FormData with multiple players
@@ -23,12 +76,14 @@ import "./signForTechnical.css";
 function SignForTechnical() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [successType, setSuccessType] = useState(""); // "technical" or "players"
   const [showPlayerForm, setShowPlayerForm] = useState(false);
   const [showTechnicalForm, setShowTechnicalForm] = useState(false);
   const [showMultiPlayerForm, setShowMultiPlayerForm] = useState(false);
   const [showCategorySelection, setShowCategorySelection] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [academyNameFromToken, setAcademyNameFromToken] = useState("");
+  const isMountedRef = useRef(true);
   const [players, setPlayers] = useState([
     {
       id: 1,
@@ -63,6 +118,39 @@ function SignForTechnical() {
     setAcademyNameFromToken(academyName);
     console.log("Academy name from token:", academyName);
   }, []);
+
+  // Cleanup function to prevent memory leaks and DOM manipulation errors
+  useEffect(() => {
+    return () => {
+      // Mark component as unmounted
+      isMountedRef.current = false;
+      // Cleanup any pending timeouts or async operations
+      setIsLoading(false);
+      setIsSuccess(false);
+      setSuccessType("");
+      setShowPlayerForm(false);
+      setShowTechnicalForm(false);
+      setShowMultiPlayerForm(false);
+      setShowCategorySelection(false);
+    };
+  }, []);
+
+  // Prevent page navigation or refresh after successful registration
+  useEffect(() => {
+    if (isSuccess) {
+      // Prevent any navigation or refresh attempts
+      const handleBeforeUnload = (e) => {
+        e.preventDefault();
+        e.returnValue = '';
+      };
+      
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, [isSuccess]);
 
   // Function to handle category selection and initialize players with selected category
   const handleCategorySelection = (category) => {
@@ -198,10 +286,20 @@ function SignForTechnical() {
         );
 
         if (response.status === 200) {
-          setIsSuccess(true);
-          resetForm();
-          toast.success("تم تسجيل الجهاز الفني بنجاح!");
-          setShowTechnicalForm(false);
+          // Show success message first
+          if (isMountedRef.current) {
+            try {
+              setIsSuccess(true);
+              setSuccessType("technical");
+              resetForm();
+              // Don't show toast to avoid conflicts with success modal
+              setShowTechnicalForm(false);
+            } catch (error) {
+              console.error("Error setting success state:", error);
+              // Fallback to simple success
+              toast.success("تم تسجيل الجهاز الفني والإداري بنجاح!");
+            }
+          }
         }
       } catch (error) {
         console.error("Technical staff registration error:", error);
@@ -385,25 +483,37 @@ function SignForTechnical() {
       );
 
       if (response.status === 200) {
-        setIsSuccess(true);
-        toast.success(`تم تسجيل ${players.length} لاعب بنجاح!`);
-        setShowMultiPlayerForm(false);
-        // Reset players array
-        setPlayers([
-          {
-            id: 1,
-            playerName: "",
-            nationality: "",
-            birthDate: "",
-            position: "",
-            numberShirt: "",
-            urlImage: null,
-            urlPassport: null,
-            category: "",
-          },
-        ]);
-        setSelectedCategory("");
-        setShowCategorySelection(false);
+        // Use setTimeout to prevent DOM manipulation conflicts
+        setTimeout(() => {
+          if (isMountedRef.current) {
+            try {
+              setIsSuccess(true);
+              setSuccessType("players");
+              // Don't show toast to avoid conflicts with success modal
+              setShowMultiPlayerForm(false);
+              // Reset players array
+              setPlayers([
+                {
+                  id: 1,
+                  playerName: "",
+                  nationality: "",
+                  birthDate: "",
+                  position: "",
+                  numberShirt: "",
+                  urlImage: null,
+                  urlPassport: null,
+                  category: "",
+                },
+              ]);
+              setSelectedCategory("");
+              setShowCategorySelection(false);
+            } catch (error) {
+              console.error("Error setting success state:", error);
+              // Fallback to simple success
+              toast.success(`تم تسجيل ${players.length} لاعب بنجاح!`);
+            }
+          }
+        }, 100);
       }
     } catch (error) {
       console.error("Multi-player registration error:", error);
@@ -1159,10 +1269,54 @@ function SignForTechnical() {
       {isSuccess && (
         <div className="success-message">
           <div className="success-content">
-            <span className="success-icon">✅</span>
-            <h3>تم التسجيل بنجاح!</h3>
-            <p>تم حفظ البيانات بنجاح في النظام</p>
-            <button className="btn primary" onClick={() => setIsSuccess(false)}>
+            {successType === "technical" ? (
+              <>
+                <span className="success-icon" style={{ fontSize: "4rem", marginBottom: "1rem" }}>👨‍💼✅</span>
+                <h3 style={{ fontSize: "1.8rem", marginBottom: "1rem", color: "#059669" }}>
+                  تم تسجيل الجهاز الفني والإداري بنجاح!
+                </h3>
+                <p style={{ fontSize: "1.1rem", marginBottom: "2rem", color: "#374151" }}>
+                  تم حفظ بيانات العضو في النظام بنجاح
+                </p>
+              </>
+            ) : (
+              <>
+                <span className="success-icon" style={{ fontSize: "4rem", marginBottom: "1rem" }}>👥✅</span>
+                <h3 style={{ fontSize: "1.8rem", marginBottom: "1rem", color: "#059669" }}>
+                  تم تسجيل اللاعبين بنجاح!
+                </h3>
+                <p style={{ fontSize: "1.1rem", marginBottom: "2rem", color: "#374151" }}>
+                  تم حفظ بيانات اللاعبين في النظام بنجاح
+                </p>
+              </>
+            )}
+            <button 
+              className="btn primary" 
+              style={{ 
+                fontSize: "1.1rem", 
+                padding: "0.75rem 2rem",
+                borderRadius: "8px",
+                fontWeight: "600",
+                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                border: "none",
+                boxShadow: "0 4px 15px rgba(16, 185, 129, 0.3)",
+                transition: "all 0.3s ease"
+              }}
+              onClick={() => {
+                if (isMountedRef.current) {
+                  setIsSuccess(false);
+                  setSuccessType("");
+                }
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = "translateY(-2px)";
+                e.target.style.boxShadow = "0 6px 20px rgba(16, 185, 129, 0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = "translateY(0)";
+                e.target.style.boxShadow = "0 4px 15px rgba(16, 185, 129, 0.3)";
+              }}
+            >
               موافق
             </button>
           </div>
@@ -1172,4 +1326,13 @@ function SignForTechnical() {
   );
 }
 
-export default SignForTechnical;
+// Wrapper component with Error Boundary
+const SignForTechnicalWithErrorBoundary = () => {
+  return (
+    <ErrorBoundary>
+      <SignForTechnical />
+    </ErrorBoundary>
+  );
+};
+
+export default SignForTechnicalWithErrorBoundary;
